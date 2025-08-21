@@ -4,25 +4,21 @@ import { Link } from 'react-router-dom';
 function Signin({text,color,toPage}) {
     const[email,setEmail]=useState('');
     const[password,setpassword]=useState('');
-    const[user,setUser]=useState({});
+    const[signinData,setsigninData]=useState({});
 
     const handleSubmit=async(e)=>{
         e.preventDefault();
         console.log("submit");
-        console.log(user)
-        setUser({email,password});
+        console.log(signinData)
+        setsigninData({email,password});
         setEmail('');
         setpassword('');
     }
   return (
-    <div className="h-screen  flex flex-col justify-between">
+    <div className="h-full flex flex-col justify-between">
       <div className="p-7 flex flex-col justify-center items-center gap-5">
-        <img
-          className="h-16  mb-5"
-          src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-          alt=""
-        />
-        <h1 className='mb-5 text-3xl'>Sign in as {text==="User"? "Captain":"User"}.</h1>
+       
+       
         <form >
           <h3 className="text-xl mb-2 font-medium">What's your email..? </h3>
           <input
@@ -46,7 +42,7 @@ function Signin({text,color,toPage}) {
        <p> <span>
         New here? 
        </span>
-        <Link to={"/user-signup"} className="inline-block cursor-pointer text-blue-500 hover:text-purple-600 font-light" > Create an Account..!</Link>
+        <Link to={text==="User"?  "/captain-signup" :"/user-signup"} className="inline-block cursor-pointer text-blue-500 hover:text-purple-600 font-light" > Create an Account..!</Link>
         </p> 
       </div>
 
@@ -58,7 +54,7 @@ function Signin({text,color,toPage}) {
 
       <div className="p-7 flex flex-col justify-center items-center gap-5">
         
-        <Link to={toPage} className={`${color} flex items-center justify-center text-white mb-7 rounded px- py-2 px-5 w-full text-lg cursor-pointer`}>
+        <Link to={toPage} className={`${color} flex items-center justify-center text-white mb-7 rounded px- py-2 px-5  text-lg cursor-pointer w-80`}>
           Sign in as a {text}
         </Link>
       </div>

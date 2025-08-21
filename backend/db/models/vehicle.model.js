@@ -19,7 +19,6 @@ const vehicleSchema=new mongoose.Schema({
         vehicleType:{
             type:String,
             required:true,
-            min:[1, 'Capacity must be at least 1']
         },
         capacity:{
             type:Number,

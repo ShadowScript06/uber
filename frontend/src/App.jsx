@@ -4,9 +4,11 @@ import UserSignin from "./pages/UserSignin";
 import CaptainSignIn from "./pages/CaptainSignIn";
 import UserSignup from "./pages/UserSignup";
 import CaptainSignup from "./pages/CaptainSignup";
+import Navbar from "./components/Navbar";
 
 function App() {
   return <>
+  <Navbar/>
   <Routes>
     <Route path="/" element={<Home/>}/>
     <Route path="/user-signin" element={<UserSignin/>}/>
