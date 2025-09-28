@@ -1,20 +1,39 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import axios from 'axios';
+import {UserDataContext } from "../../context/UserDataContext";
 export default function UserSignup() {
+  const navigate=useNavigate();
+
   const[firstname,setFirstname]=useState('');
   const[lastname,setLastname]=useState('');
   const[email,setEmail]=useState('');
   const[password,setPassword]=useState('');
 
-  
-  const handleSignup=()=>{
-      console.log({
+  const {setUser}=useContext(UserDataContext);
+  const handleSignup=async (e)=>{
+    try {
+      e.preventDefault();  
+      const newUser={
         firstname,
         lastname,
         email,
-        password,
-      });
+        password
+      }
+      const response =await axios.post(`${import.meta.env.VITE_BASE_URL}/user/signup`, newUser);
+      if(response.status===200){
+        const data=response.data;
+         setUser({
+              token:data.token,
+              user:email
+            });
+        localStorage.setItem('token',data.token);
+        navigate('/home');
+      }  
+    } catch (error) {
+      alert(error.response.data.message);
+    }
+    
   }
   return (
     <div className="flex flex-col justify-center items-center ">

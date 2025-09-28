@@ -5,16 +5,21 @@ import CaptainSignIn from "./pages/CaptainSignIn";
 import UserSignup from "./pages/UserSignup";
 import CaptainSignup from "./pages/CaptainSignup";
 import Navbar from "./components/Navbar";
+import Landing from "./pages/Landing";
+import UserProtectedWrapper from "./components/UserProtectedWrapper";
 
 function App() {
   return <>
   <Navbar/>
   <Routes>
-    <Route path="/" element={<Home/>}/>
+    <Route path="/" element={<Landing/>}/>
     <Route path="/user-signin" element={<UserSignin/>}/>
     <Route path="/captain-signin" element={<CaptainSignIn/>}/>
     <Route path="/user-signup" element={<UserSignup/>}/>
     <Route path="/captain-signup" element={<CaptainSignup/>}/>
+    <Route path='/home' element={ <UserProtectedWrapper ><Home/> </UserProtectedWrapper>}/>
+   
+   
 
   </Routes>
   </>;

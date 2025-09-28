@@ -23,7 +23,6 @@ app.use('/api/v1/user',userRouter);
 app.use('/api/v1/captain',captainRouter);
 
 
-
 app.listen( PORT ,async()=>{
     await connectDb();
     console.log("App is running on "+PORT+" at "+ date.toLocaleString());

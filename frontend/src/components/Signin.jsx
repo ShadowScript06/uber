@@ -1,18 +1,47 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { UserDataContext } from '../../context/UserDataContext';
 
-function Signin({text,color,toPage}) {
+function Signin ({text,color,toPage}) {
     const[email,setEmail]=useState('');
     const[password,setpassword]=useState('');
-    const[signinData,setsigninData]=useState({});
+    const navigate=useNavigate();
+    const {setUser}=useContext(UserDataContext);
+
 
     const handleSubmit=async(e)=>{
-        e.preventDefault();
-        console.log("submit");
-        console.log(signinData)
-        setsigninData({email,password});
-        setEmail('');
-        setpassword('');
+       e.preventDefault();
+       let url=import.meta.env.VITE_BASE_URL;
+
+       if(text==="User"){
+        url=url+'/captain/signin';
+       }else{
+        url=url+'/user/signin';
+       }
+
+
+       try {
+          const response=await axios.post(url,{email,password});
+
+          if(response.status===200){
+            const data=response.data;
+            setUser({
+              token:data.token,
+              user:email
+            });
+            localStorage.setItem('token',data.token);
+            if(text==="User"){
+              localStorage.setItem('captain',email)
+            }else{
+              localStorage.setItem('user',email);
+            }
+            navigate('/home');
+          }
+       } catch (error) {
+          alert(error.response.data.message);
+       }
+
     }
   return (
     <div className="h-full flex flex-col justify-between">

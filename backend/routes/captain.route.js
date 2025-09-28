@@ -31,7 +31,6 @@ router.post('/signup',async(req,res)=>{
         vehicleType,
         capacity,
     }=req.body;
-
     const captainParsedData= captainSignUpSchema.safeParse({
         firstname,
         lastname,

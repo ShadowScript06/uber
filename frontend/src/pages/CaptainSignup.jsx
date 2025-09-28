@@ -1,5 +1,8 @@
+import axios from "axios";
+import { useContext } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { CaptainDataContext } from "../../context/CaptainDataContext";
 
 export default function CaptainSignup() {
 
@@ -11,18 +14,36 @@ export default function CaptainSignup() {
   const[type,setType]=useState('');
   const[capacity,setCapacity]=useState('');
   const[color,setColor]=useState('');
+  const {setCaptain}=useContext(CaptainDataContext);
+  const navigate=useNavigate();
 
-  const handleSignup=()=>{
-      console.log({
+  const handleSignup=async(e)=>{
+      try {
+      e.preventDefault();  
+      const newCaptain={
         firstname,
         lastname,
         email,
         password,
         plate,
-        type,
-        color,
-        capacity
-      });
+        vehicleType:type,
+        capacity:Number(capacity),
+        color
+      }
+      const response =await axios.post(`${import.meta.env.VITE_BASE_URL}/captain/signup`, newCaptain);
+      if(response.status===200){
+        const data=response.data;
+         setCaptain({
+              token:data.token,
+              captain:email
+            });
+        localStorage.setItem('token',data.token);
+        localStorage.setItem('captain',email);
+        navigate('/home');
+      }  
+    } catch (error) {
+      alert(error.response.data.message);
+    }
   }
   return (
     <div className="flex flex-col justify-center items-center ">
@@ -100,7 +121,7 @@ export default function CaptainSignup() {
 
           <div className="w-full">
 
-          <p>Already have an account..?<Link to={"/captain-signin"}className="cursor-pointer text-blue-500">Sign in.</Link></p>
+          <p>Already have an account..?<Link to={"/captain-signin"}className="cursor-pointer  text-blue-500">Sign in.</Link></p>
            <p>Sign up as User<Link to={"/user-signup"}className="cursor-pointer text-blue-500">Click here.</Link></p>
           </div>
           

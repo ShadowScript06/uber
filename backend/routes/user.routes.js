@@ -27,7 +27,7 @@ router.post("/signup", async (req, res) => {
 
     if (existingUser) {
       return res.status(409).json({
-        message: "User Already Exist, Please try again.",
+        message: "User Already Exist, Please try Sign in.",
       });
     }
 
