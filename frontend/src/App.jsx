@@ -7,9 +7,10 @@ import CaptainSignup from "./pages/CaptainSignup";
 import Navbar from "./components/Navbar";
 import Landing from "./pages/Landing";
 import UserProtectedWrapper from "./components/UserProtectedWrapper";
+import CaptainHome from "./pages/CaptainHome";
 
 function App() {
-  return <>
+  return < div>
   <Navbar/>
   <Routes>
     <Route path="/" element={<Landing/>}/>
@@ -18,11 +19,9 @@ function App() {
     <Route path="/user-signup" element={<UserSignup/>}/>
     <Route path="/captain-signup" element={<CaptainSignup/>}/>
     <Route path='/home' element={ <UserProtectedWrapper ><Home/> </UserProtectedWrapper>}/>
-   
-   
-
+    <Route path="captain-home" element={<UserProtectedWrapper> <CaptainHome/> </UserProtectedWrapper>}/>
   </Routes>
-  </>;
+  </div>;
 }
 
 export default App;

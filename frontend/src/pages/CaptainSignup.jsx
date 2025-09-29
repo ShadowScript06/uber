@@ -39,7 +39,7 @@ export default function CaptainSignup() {
             });
         localStorage.setItem('token',data.token);
         localStorage.setItem('captain',email);
-        navigate('/home');
+        navigate('/captain-home');
       }  
     } catch (error) {
       alert(error.response.data.message);

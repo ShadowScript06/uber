@@ -1,22 +1,20 @@
 import React from "react";
-import { useContext } from "react";
-import { UserDataContext } from "../../context/UserDataContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { CaptainDataContext } from "../../context/CaptainDataContext";
+
 
 function UserProtectedWrapper({ children }) {
-  const { user } = useContext(UserDataContext);
-  const {captain}=useContext(CaptainDataContext);
+  const user  = localStorage.getItem('user');
+  const captain=localStorage.getItem('captain');
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+ 
 
   useEffect(() => {
-    if (!user&& !captain ) {
+    if (!user   && !captain ) {
       alert("Invalid Access please try login");
       navigate("/");
     }
-  }, [navigate,user,token]);
+  }, [navigate,user,captain]);
 
   return <div>{children}</div>;
 }
