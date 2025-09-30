@@ -7,7 +7,7 @@ const Captain=require('../db/models/Captain.model');
 const Vehicle=require('../db/models/vehicle.model');
 const {captainAuth}=require('../middlewares/auth');
 const bcrypt=require('bcrypt');
-const  jwt=require('jsonwebtoken');
+const jwt=require('jsonwebtoken');
 const BlacklistToken=require('../db/models/BlacklistedToken.model');
 const JWT_SECRET=process.env.JWT_SECRET;
 
@@ -123,7 +123,7 @@ router.post('/signin',async(req,res)=>{
    
     if(!captainParsedData.success ){
         return res.status(400).json({
-            message:"Invalid Input, Plese try again."
+            message:"Invalid Input, Please try again."
         });
     }
 

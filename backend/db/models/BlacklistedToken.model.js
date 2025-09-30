@@ -1,9 +1,9 @@
 const mongoose=require('mongoose');
-const { string } = require('zod');
+
 
 const blacklistedTokenSchema=new mongoose.Schema({
     token:{
-        type:string,
+        type:String,
         required:true,
         unique:true
     },

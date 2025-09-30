@@ -9,7 +9,7 @@ const date=new Date();
 const PORT=parseInt(process.env.PORT)||3000;
 const userRouter=require('./routes/user.routes');
 const captainRouter=require('./routes/captain.route');
-
+const rideRouter=require('./routes/ride.route');
 
 const app=express();
 app.use(cors());
@@ -21,6 +21,7 @@ app.use(express.urlencoded({extended:true}));
 
 app.use('/api/v1/user',userRouter);
 app.use('/api/v1/captain',captainRouter);
+app.use('/api/v1/ride',rideRouter);
 
 
 app.listen( PORT ,async()=>{

@@ -6,6 +6,7 @@ const User = require("../db/models/User.models");
 const JWT_SECRET = process.env.JWT_SECRET;
 const BlacklistedToken =require('../db/models/BlacklistedToken.model');
 const Captain = require("../db/models/Captain.model");
+const { response } = require("express");
 const userAuth = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
@@ -29,7 +30,7 @@ const userAuth = async (req, res, next) => {
     }
 
     const userId = jwt.decode(token, JWT_SECRET).id;
-    console.log(userId);
+   
     if (!userId) {
       return res.status(401).json({
         message: "Unauthorised",
@@ -37,6 +38,11 @@ const userAuth = async (req, res, next) => {
     }
 
     const user = await User.findById(userId);
+    if(!user){
+      res.status(403).json({
+        message:"unauthorised."
+      })
+    }
     req.user = user;
     req.token=token;
     next();
@@ -72,7 +78,7 @@ const captainAuth = async (req, res, next) => {
     }
 
     const userId = jwt.decode(token, JWT_SECRET).id;
-    console.log(userId);
+    
     if (!userId) {
       return res.status(401).json({
         message: "Unauthorised",
@@ -80,6 +86,12 @@ const captainAuth = async (req, res, next) => {
     }
 
     const captain = await Captain.findById(userId);
+
+    if(!captain){
+      res.status(403).json({
+        message:"Unauthorised"
+      })
+    }
     req.captain = captain;
     req.token=token;
     next();
