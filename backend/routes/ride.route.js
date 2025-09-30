@@ -4,6 +4,9 @@ const { userAuth, captainAuth } = require("../middlewares/auth");
 const ridepostSchema = require("../validations/ridepost.validation");
 const Ride = require("../db/models/Ride");
 const { route } = require("./captain.route");
+const Vehicle = require("../db/models/vehicle.model");
+const Captain = require("../db/models/Captain.model");
+
 //POST A RIDE
 
 router.post("/", userAuth, async (request, response) => {
@@ -108,7 +111,6 @@ router.patch("/:rideId", captainAuth, async (request, response) => {
 
 router.get("/:rideId", userAuth, async (request, response) => {
   try {
-
     const rideId = request.params.rideId;
 
     const ride = await Ride.findById(rideId);
@@ -119,9 +121,15 @@ router.get("/:rideId", userAuth, async (request, response) => {
       });
     }
     if (ride.status === "booked") {
-      response.status(200).json({
-        status: "Booked",
-      });
+      const captainInfo = await Captain.findById(ride.captain);
+      const vehicleInfo = await Vehicle.findOne({ captain: ride.captain });
+
+      const rideInfo = {
+        captain: captainInfo.firstname + " " + captainInfo.lastname,
+        plate: vehicleInfo.plate,
+      };
+
+      response.json(200).json({ rideInfo :rideInfo});
     }
   } catch (error) {
     console.log(error);

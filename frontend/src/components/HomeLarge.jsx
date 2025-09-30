@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Suggestions from "./Suggestions";
 import axios from "axios";
+import RideLoader from "./RideLoader";
+
 function HomeLarge() {
   const [pickup, setPickup] = useState("");
   const [dropoff, setDropoff] = useState("");
@@ -17,9 +19,13 @@ function HomeLarge() {
   const [pickupLon, setPickupLon] = useState("");
   const [dropoffLat, setDropoffLat] = useState("");
   const [dropoffLon, setDropoffLon] = useState("");
-  const[loading,setLoading]=useState(false);
-  const[rides,setRides]=useState([]);
-  const  baseRides=[
+  const [loading, setLoading] = useState(false);
+  const [rides, setRides] = useState([]);
+  const [type, setType] = useState("");
+  const [polling, setPolling] = useState(false);
+  const [rideId, setRideId] = useState("");
+
+  const baseRides = [
     {
       name: "Uber Bike",
       price: 100,
@@ -27,6 +33,7 @@ function HomeLarge() {
       capacity: 1,
       time: 2,
       perkm: 2,
+      type: "bike",
     },
     {
       name: "Uber Auto",
@@ -35,6 +42,7 @@ function HomeLarge() {
       capacity: 3,
       time: 6,
       perkm: 4,
+      type: "auto",
     },
     {
       name: "Uber Go",
@@ -43,14 +51,9 @@ function HomeLarge() {
       capacity: 4,
       time: 3,
       perkm: 8,
+      type: "car",
     },
-  ]
-  
-
-  const sampleCaptainData = {
-    name: "Prajwal Jadhav",
-    plate: "MH 12 KC 3042",
-  };
+  ];
 
   function getDistanceFromLatLonInKm(lat1, lon1, lat2, lon2) {
     const R = 6371; // Radius of the earth in km
@@ -103,11 +106,32 @@ function HomeLarge() {
     return () => clearTimeout(timer);
   }, [dropoff]);
 
+  useEffect(() => {
+    if (polling) {
+      const token = localStorage.getItem("token");
+      const interval=setInterval(() => {
+        const headers = { Authorization: "Bearer " + token };
+        axios.get(import.meta.env.VITE_BASE_URL + "/ride/" + rideId, {
+          headers,
+        }).then((response) => {
+        if (response.status === 200) {
+          console.log(response);
+          const data = response.data;
+          console.log(data);
+          setCaptain(data.rideInfo.captain);
+          setPlate(data.rideInfo.plate);
+          setPolling(false);
+        }
+      });
+      }, 5000);
 
-  
+      return () => clearInterval(interval);
+    }
+  }, [polling, rideId]);
+
   const handleLocationSubmit = async (e) => {
     e.preventDefault();
-    
+
     const distance = getDistanceFromLatLonInKm(
       pickupLat,
       pickupLon,
@@ -115,19 +139,21 @@ function HomeLarge() {
       dropoffLon
     );
 
-  setRides(
+    setRides(
       baseRides.map((ride) => ({
         ...ride,
         price: parseInt(ride.price + distance * ride.perkm),
-      })))
-    
+      }))
+    );
+
     setShowRideOptions(true);
   };
 
-  const handleRideSubmit = async (e, price, image) => {
+  const handleRideSubmit = async (e, price, image, vehicleType) => {
     e.preventDefault();
     setFare(price);
     setImg(image);
+    setType(vehicleType);
     setShowConfirmRide(true);
   };
 
@@ -146,12 +172,30 @@ function HomeLarge() {
   const handleConfirmRide = async (e) => {
     e.preventDefault();
     setShowConfirmRide(false);
-    setCaptain(sampleCaptainData.name);
-    setPlate(sampleCaptainData.plate);
+
+    try {
+      const data = {
+        pickup,
+        dropoff,
+        fare: fare.toString(),
+        vehicleType: type,
+      };
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: "Bearer " + token };
+      const response = await axios.post(
+        import.meta.env.VITE_BASE_URL + "/ride",
+        data,
+        { headers }
+      );
+      setRideId(response.data.rideId);
+      setPolling(true);
+    } catch (error) {
+      console.log(error);
+    }
+
     setShowRideDetails(true);
   };
 
-  
   return (
     <div className="hidden lg:block lg:max-h-96 ">
       {/* MAIN DIV */}
@@ -288,7 +332,9 @@ function HomeLarge() {
                   <div
                     key={idx}
                     className="flex justify-between items-center p-3 m-3 w-full border-gray-300 border shadow-sm rounded-xl cursor-pointer hover:bg-gray-100"
-                    onClick={(e) => handleRideSubmit(e, ride.price, ride.img)}
+                    onClick={(e) =>
+                      handleRideSubmit(e, ride.price, ride.img, ride.type)
+                    }
                   >
                     <div className="flex items-center gap-3">
                       <img
@@ -395,48 +441,54 @@ function HomeLarge() {
       )}
 
       {/* Ride details */}
-      {showRideDetails && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center ">
-          <div className="flex flex-col gap-3 p-5 border m-5 rounded-xl border-gray-300 w-80 bg-white relative">
-            <div className="absolute right-5">
-              <svg
-                onClick={() => setShowRideDetails(false)}
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-8 h-8 rounded-full bg-black p-1 cursor-pointer"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="white"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
+      {}
+      {showRideDetails &&
+        ( polling ? (
+          <RideLoader />
+        ) : (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center ">
+            <div className="flex flex-col gap-3 p-5 border m-5 rounded-xl border-gray-300 w-80 bg-white relative">
+              <div className="absolute right-5">
+                <svg
+                  onClick={() => setShowRideDetails(false)}
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="w-8 h-8 rounded-full bg-black p-1 cursor-pointer"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="white"
+                  strokeWidth={2}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+              <div className="flex justify-between items-center  border-gray-300 border-b p-2 w-full">
+                <img
+                  className="h-20 w-20 object-contain mx-auto"
+                  src={img}
+                  alt="rideimg"
                 />
-              </svg>
-            </div>
-            <div className="flex justify-between items-center  border-gray-300 border-b p-2 w-full">
-              <img
-                className="h-20 w-20 object-contain mx-auto"
-                src={img}
-                alt="rideimg"
-              />
-            </div>
-            <div className="border-b border-gray-300 p-2 w-full">
-              <h3 className="text-xl font-semibold">Driver Name : {captain}</h3>
-              <h3 className="text-xl font-semibold">Vehicle No: {plate}</h3>
-            </div>
-            <div className="border-b border-gray-300 p-2 w-full">
-              <h3 className="text-xl font-semibold">Pickup: {pickup}</h3>
-              <h3 className="text-xl font-semibold">DropOff: {dropoff}</h3>
-            </div>
+              </div>
+              <div className="border-b border-gray-300 p-2 w-full">
+                <h3 className="text-xl font-semibold">
+                  Driver Name : {captain}
+                </h3>
+                <h3 className="text-xl font-semibold">Vehicle No: {plate}</h3>
+              </div>
+              <div className="border-b border-gray-300 p-2 w-full">
+                <h3 className="text-xl font-semibold">Pickup: {pickup}</h3>
+                <h3 className="text-xl font-semibold">DropOff: {dropoff}</h3>
+              </div>
 
-            <div className="border-b border-gray-300 p-2 w-full">
-              <h1 className="text-2xl font-bold mx-aut0">₹{fare}</h1>
+              <div className="border-b border-gray-300 p-2 w-full">
+                <h1 className="text-2xl font-bold mx-aut0">₹{fare}</h1>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        ))}
     </div>
   );
 }
