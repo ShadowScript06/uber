@@ -25,8 +25,8 @@ function RideDetailsPanel({pickup,dropoff,fare,img,captain,plate}) {
                 <h3 className='text-xl font-semibold'>DropOff: {dropoff}</h3>
             </div>
 
-            <div className='border-b border-gray-300 p-2 w-full'>
-                <h1 className='text-2xl font-bold mx-aut0'>{fare}</h1>  
+            <div className='border-b border-gray-300 p-2 w-full flex justify-center items-center'>
+                <h1 className='text-2xl font-bold mx-aut0'>  ₹{fare}</h1>  
             </div>
     </div>
   )

@@ -1,15 +1,24 @@
 import React from "react";
 
-function Suggestions({ addresses, onSelect }) {
-   
+function Suggestions({ addresses, setPickup, setDropoff, location ,setDropoffLat, setDropoffLon, setPickupLat, setPickupLon,setAddresses}) {
+  function handleClick(address) {
+    if (location === "pickup") {
+      setPickup(address.display_name);
+      setPickupLon(parseFloat(address.lon));
+      setPickupLat(parseFloat(address.lat));
+    } else if(location==="dropoff"){
+      setDropoff(address.display_name);
+      setDropoffLat(parseFloat(address.lat));
+      setDropoffLon(parseFloat(address.lon));
+    }
+    setAddresses([]);
+  }
   return (
     <div className="overflow-auto max-h-[60vh] flex flex-col gap-2">
-    
-
       {addresses.map((address, idx) => (
         <div
           key={idx}
-          onClick={() => onSelect(address)}
+          onClick={()=>handleClick(address)}
           className="flex items-center gap-3 p-3  rounded-lg cursor-pointer hover:bg-gray-200"
         >
           {/* Location pin */}
@@ -23,7 +32,7 @@ function Suggestions({ addresses, onSelect }) {
           </svg>
 
           {/* Address text */}
-          <span className="text-gray-900">{address}</span>
+          <span className="text-gray-900">{address.display_name}</span>
         </div>
       ))}
     </div>

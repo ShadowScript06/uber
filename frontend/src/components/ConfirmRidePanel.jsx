@@ -28,7 +28,7 @@ function ConfirmRidePanel({ pickup, dropoff, fare, img ,onBack}) {
         ${mounted ? "translate-y-0" : "translate-y-full"}`}
     >
       {/* Top handle / Ride symbol */}
-      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex justify-between  w-full px-7">
+      <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex justify-between  w-full px-7 py-3 border-gray-300 ">
 
       <button
           onClick={onBack}
@@ -72,7 +72,7 @@ function ConfirmRidePanel({ pickup, dropoff, fare, img ,onBack}) {
 
       {/* Fare */}
       <div className="mt-6 text-2xl font-bold">
-        Fare: {fare}
+        Fare:  ₹{fare}
       </div>
 
       {/* Confirm button */}

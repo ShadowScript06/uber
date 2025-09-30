@@ -19,7 +19,7 @@ function App() {
     <Route path="/user-signup" element={<UserSignup/>}/>
     <Route path="/captain-signup" element={<CaptainSignup/>}/>
     <Route path='/home' element={ <UserProtectedWrapper ><Home/> </UserProtectedWrapper>}/>
-    <Route path="captain-home" element={<UserProtectedWrapper> <CaptainHome/> </UserProtectedWrapper>}/>
+    <Route path="/captain-home" element={<UserProtectedWrapper> <CaptainHome/> </UserProtectedWrapper>}/>
   </Routes>
   </div>;
 }

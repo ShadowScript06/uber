@@ -2,7 +2,9 @@ import React from 'react'
 
 function CaptainHome() {
   return (
-    <div>CaptainHome</div>
+    <div className=''>
+            geyyy
+    </div>
   )
 }
 
