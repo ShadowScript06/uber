@@ -395,7 +395,7 @@ function HomeLarge() {
           >
             {showRideOptions ? (
               <img
-                src="/home.avif"
+                src="../../public/home.avif"
                 alt="cab"
                 className="rounded-2xl h-150  object-contain"
               />
