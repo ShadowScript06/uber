@@ -10,7 +10,7 @@ function Landing() {
           <h1 className="text-5xl font-bold">
             Request a ride for now or later
           </h1>
-          <img className="lg:hidden" src="../../public/landingpagemobile.png" alt="" />
+          <img className="lg:hidden" src="/landingpagemobile.png" alt="" />
           <div className="flex flex-col justify-between items-start w-full gap-4">
             <div>
               <p>Upto 50% off on your first 5 Uber rides. T&C apply.*</p>
@@ -34,7 +34,7 @@ function Landing() {
         <div className="hidden lg:flex">
           <img
             className="h-108"
-            src="../../public/landing-page-pc-img.webp"
+            src="/landing-page-pc-img.webp"
             alt=""
           />
         </div>

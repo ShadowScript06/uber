@@ -6,7 +6,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
     {
       name: "Uber Bike",
       price: 50,
-      img: "../../public/bike.jpg",
+      img: "/bike.jpg",
       capacity: 1,
       time: 2,
       perKm: 2,
@@ -15,7 +15,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
     {
       name: "Uber Auto",
       price: 80,
-      img: "../../public/auto.jpg",
+      img: "/auto.jpg",
       capacity: 3,
       time: 6,
       perKm: 4,
@@ -24,7 +24,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
     {
       name: "Uber Go",
       price: 120,
-      img: "../../public/car.webp",
+      img: "/car.webp",
       capacity: 4,
       time: 3,
       perKm: 8,

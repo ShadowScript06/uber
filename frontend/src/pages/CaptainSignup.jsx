@@ -51,7 +51,7 @@ export default function CaptainSignup() {
         Sign up as Captain.
       </h1>
       <div className="flex flex-col py-3 items-center  lg:flex-row  ">
-        <img className="md:h-130 " src="../../public/signupimage.png" alt="" />
+        <img className="md:h-130 " src="/signupimage.png" alt="" />
         <form action="" className="flex flex-col gap-2 w-full p-3">
           <h3 className="text-center">Captain Info</h3>
           <div className="flex gap-2">
