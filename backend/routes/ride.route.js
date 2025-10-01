@@ -130,7 +130,7 @@ router.get("/:rideId", userAuth, async (request, response) => {
         plate: vehicleInfo.plate,
       };
 
-      response.json(200).json({ rideInfo :rideInfo});
+      response.status(200).json({ rideInfo :rideInfo});
     }
   } catch (error) {
     console.log(error);

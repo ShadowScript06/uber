@@ -56,13 +56,16 @@ export default function CaptainHome() {
   useEffect(() => {
     if (!captainInfo) return;
     fetchRides();
+
+   
   }, [captainInfo]);
 
   const handleAcceptRide = async () => {
     const token = localStorage.getItem("token");
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_BASE_URL}/ride/${rideId}`,{},
+        `${import.meta.env.VITE_BASE_URL}/ride/${rideId}`,
+        {},
         {
           headers: {
             authorization: "Bearer " + token,
@@ -72,7 +75,7 @@ export default function CaptainHome() {
       if (response.status === 200) {
         setShowConfirm(false);
         fetchRides();
-        alert('Ride Accepted');
+        alert("Ride Accepted");
       }
     } catch (error) {
       console.log(error);

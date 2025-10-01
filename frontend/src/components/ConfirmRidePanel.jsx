@@ -23,9 +23,7 @@ function ConfirmRidePanel({ pickup, dropoff, fare, img, onBack, type }) {
           })
           .then((response) => {
             if (response.status === 200) {
-              console.log(response);
               const data = response.data;
-              console.log(data);
               setCaptain(data.rideInfo.captain);
               setPlate(data.rideInfo.plate);
               setPolling(false);

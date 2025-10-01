@@ -23,27 +23,36 @@ function HomeLarge() {
   const [rides, setRides] = useState([]);
   const [type, setType] = useState("");
   const [polling, setPolling] = useState(false);
-  const [rideId, setRideId] = useState("");
+  const [rideId, setRideId] = useState("68dd2bd74dc69c614889528b");
 
-  const pollingfunc = async (headers) => {
-    const response = await axios.get(
-      import.meta.env.VITE_BASE_URL + "/ride/" + rideId,
-      {
-        headers,
-      }
-    );
+  
 
-    if (response.status === 200) {
-      console.log(response);
-      const data = response.data;
-      console.log(data);
-      setCaptain(data.rideInfo.captain);
-      setPlate(data.rideInfo.plate);
-      setPolling(false);
+
+const pollingFunc=async()=>{
+  const token=localStorage.getItem('token');
+  const response=await axios.get(`${import.meta.env.VITE_BASE_URL}/ride/${rideId}`,{
+    headers:{
+      Authorization: `Bearer ${token}`
     }
-  };
+  });
+  if(response.status===200){
+    setPolling(false);
+    const data=response.data;
+    setCaptain(data.rideInfo.captain);
+    setPlate(data.rideInfo.plate);
+  }
+}
 
+useEffect(()=>{
+  if(!polling)return;
+    const interval=setInterval(()=>{
+        pollingFunc();
+    },5000);
+
+    ()=>clearInterval(interval);
+},[rideId,polling])
  
+
 
   const baseRides = [
     {
@@ -126,21 +135,7 @@ function HomeLarge() {
     return () => clearTimeout(timer);
   }, [dropoff]);
 
- useEffect(() => {
-  if (!polling || !rideId) return;
-
-  const token = localStorage.getItem("token");
-  const headers = { Authorization: "Bearer " + token };
-
-  const interval = setInterval(() => {
-    console.log("server polled");
-    pollingfunc(headers); // your polling function
-  }, 10000);
-
-  // Cleanup on unmount or when dependencies change
-  return () => clearInterval(interval);
-}, [polling, rideId]);
-
+ 
 
  
 
