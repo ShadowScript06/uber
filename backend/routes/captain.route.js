@@ -89,7 +89,7 @@ router.post('/signup',async(req,res)=>{
     await session.commitTransaction();
     session.endSession();
 
-    const token=jwt.sign({id:newCaptain[0]._id},JWT_SECRET);
+    const token=jwt.sign({id:newCaptain[0]._id,role:"captain"},JWT_SECRET);
 
     return res.status(200).json({
         message:"Captain Sign up Succesful.",
@@ -165,6 +165,7 @@ router.post('/signin',async(req,res)=>{
 router.get("/profile", captainAuth, async (req, res) => {
   try {
     const captain = req.captain;
+  
     const vehicles=await Vehicle.find({captain:captain._id.toString()});
     const filteredVehicles=vehicles.map((vehicle)=>{
         return {

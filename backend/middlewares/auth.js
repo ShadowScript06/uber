@@ -4,7 +4,7 @@ dotenv.config();
 const jwt = require("jsonwebtoken");
 const User = require("../db/models/User.models");
 const JWT_SECRET = process.env.JWT_SECRET;
-const BlacklistedToken =require('../db/models/BlacklistedToken.model');
+const BlacklistedToken = require("../db/models/BlacklistedToken.model");
 const Captain = require("../db/models/Captain.model");
 const { response } = require("express");
 const userAuth = async (req, res, next) => {
@@ -20,31 +20,32 @@ const userAuth = async (req, res, next) => {
       return res.status(403).json({
         message: "Unauthorised",
       });
-    } 
-    const isTokenBlacklisted = await BlacklistedToken.findOne({token});
+    }
+    const isTokenBlacklisted = await BlacklistedToken.findOne({ token });
 
-    if(isTokenBlacklisted){
-        return res.status(403).json({
+    if (isTokenBlacklisted) {
+      return res.status(403).json({
         message: "Unauthorised , expired token",
       });
     }
-
-    const userId = jwt.decode(token, JWT_SECRET).id;
-   
-    if (!userId) {
+    let userId = "";
+    try {
+      userId = jwt.verify(token, JWT_SECRET).id;
+    } catch (error) {
       return res.status(401).json({
         message: "Unauthorised",
       });
     }
 
     const user = await User.findById(userId);
-    if(!user){
-      res.status(403).json({
-        message:"unauthorised."
-      })
+
+    if (!user) {
+      return res.status(401).json({
+        message: "unauthorised",
+      });
     }
     req.user = user;
-    req.token=token;
+    req.token = token;
     next();
   } catch (error) {
     console.log(error);
@@ -53,47 +54,49 @@ const userAuth = async (req, res, next) => {
     });
   }
 };
-
 
 const captainAuth = async (req, res, next) => {
   try {
     if (!req.headers.authorization) {
-      return res.status(403).json({
+      return res.status(403).json({ 
         message: "Unauthorised",
       });
     }
     const token = req.headers.authorization.split(" ")[1];
-
-    if (!token) {
+   
+    if (!token) { 
+     
       return res.status(403).json({
         message: "Unauthorised",
       });
-    } 
-    const isTokenBlacklisted = await BlacklistedToken.findOne({token});
+    }
+    const isTokenBlacklisted = await BlacklistedToken.findOne({ token });
 
-    if(isTokenBlacklisted){
-        return res.status(403).json({
+    if (isTokenBlacklisted) {
+      return res.status(403).json({ 
         message: "Unauthorised , expired token",
       });
     }
 
-    const userId = jwt.decode(token, JWT_SECRET).id;
-    
-    if (!userId) {
+    let captainId = "";
+    try {
+      captainId = jwt.verify(token, JWT_SECRET).id;
+    } catch (error) {
       return res.status(401).json({
         message: "Unauthorised",
       });
+      
     }
 
-    const captain = await Captain.findById(userId);
-
-    if(!captain){
-      res.status(403).json({
-        message:"Unauthorised"
-      })
+    const captain = await Captain.findById(captainId);
+    if (!captain) {
+      return res.status(401).json({
+        message: "unauthorised",
+      });
     }
+
     req.captain = captain;
-    req.token=token;
+    req.token = token;
     next();
   } catch (error) {
     console.log(error);
@@ -102,4 +105,4 @@ const captainAuth = async (req, res, next) => {
     });
   }
 };
-module.exports = {userAuth,captainAuth};
+module.exports = { userAuth, captainAuth };

@@ -10,6 +10,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
       capacity: 1,
       time: 2,
       perKm: 2,
+      type:"bike"
     },
     {
       name: "Uber Auto",
@@ -18,6 +19,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
       capacity: 3,
       time: 6,
       perKm: 4,
+      type:"auto"
     },
     {
       name: "Uber Go",
@@ -26,6 +28,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
       capacity: 4,
       time: 3,
       perKm: 8,
+      type:"car"
     },
   ];
 
@@ -39,16 +42,17 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
   const [mounted, setMounted] = useState(false);
   const [fare, setFare] = useState(0);
   const [showConfirmRide, setShowConfirmRide] = useState(false);
-
+  const [type,setType]=useState('');
   useEffect(() => {
     setMounted(true); // triggers transition
   }, []);
 
 
 
-  const handleSubmit = (price, img) => {
+  const handleSubmit = (price, img,vehicle) => {
     setFare(price);
     setImg(img);
+    setType(vehicle)
     setShowConfirmRide(true);
   };
 
@@ -105,7 +109,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
               <div
                 key={idx}
                 className="flex justify-between items-center p-3 border-gray-300 border shadow-sm rounded-xl cursor-pointer hover:bg-gray-100"
-                onClick={() => handleSubmit(ride.price, ride.img, ride.perKm)}
+                onClick={() => handleSubmit(ride.price, ride.img,ride.type)}
               >
                 <div className="flex items-center gap-3">
                   <img
@@ -148,6 +152,7 @@ function RideOptionsPanel({ onBack, pickup, dropoff, distance }) {
           dropoff={dropoff}
           fare={fare}
           img={img}
+          type={type}
           onBack={() => setShowConfirmRide(false)}
         />
       )}

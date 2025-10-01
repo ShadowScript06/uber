@@ -55,6 +55,7 @@ router.post("/", userAuth, async (request, response) => {
 // FETCH ALL PENDING RIDES
 
 router.get("/", captainAuth, async (request, response) => {
+  console.log("fetch ride api hit");
   try {
     const { vehicleType } = request.query;
 

@@ -28,7 +28,7 @@ export default function UserSignup() {
               user:email
             });
         localStorage.setItem('token',data.token);
-        navigate('/home');
+        navigate('/user-home');
       }  
     } catch (error) {
       alert(error.response.data.message);

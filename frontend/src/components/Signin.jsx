@@ -34,7 +34,7 @@ function Signin({ text, color, toPage }) {
           navigate('/captain-home');
         } else {
           localStorage.setItem("user", email);
-          navigate("/home");
+          navigate("/user-home");
         }
         
       }

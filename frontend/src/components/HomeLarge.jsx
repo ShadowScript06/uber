@@ -25,6 +25,26 @@ function HomeLarge() {
   const [polling, setPolling] = useState(false);
   const [rideId, setRideId] = useState("");
 
+  const pollingfunc = async (headers) => {
+    const response = await axios.get(
+      import.meta.env.VITE_BASE_URL + "/ride/" + rideId,
+      {
+        headers,
+      }
+    );
+
+    if (response.status === 200) {
+      console.log(response);
+      const data = response.data;
+      console.log(data);
+      setCaptain(data.rideInfo.captain);
+      setPlate(data.rideInfo.plate);
+      setPolling(false);
+    }
+  };
+
+ 
+
   const baseRides = [
     {
       name: "Uber Bike",
@@ -106,28 +126,23 @@ function HomeLarge() {
     return () => clearTimeout(timer);
   }, [dropoff]);
 
-  useEffect(() => {
-    if (polling) {
-      const token = localStorage.getItem("token");
-      const interval=setInterval(() => {
-        const headers = { Authorization: "Bearer " + token };
-        axios.get(import.meta.env.VITE_BASE_URL + "/ride/" + rideId, {
-          headers,
-        }).then((response) => {
-        if (response.status === 200) {
-          console.log(response);
-          const data = response.data;
-          console.log(data);
-          setCaptain(data.rideInfo.captain);
-          setPlate(data.rideInfo.plate);
-          setPolling(false);
-        }
-      });
-      }, 5000);
+ useEffect(() => {
+  if (!polling || !rideId) return;
 
-      return () => clearInterval(interval);
-    }
-  }, [polling, rideId]);
+  const token = localStorage.getItem("token");
+  const headers = { Authorization: "Bearer " + token };
+
+  const interval = setInterval(() => {
+    console.log("server polled");
+    pollingfunc(headers); // your polling function
+  }, 10000);
+
+  // Cleanup on unmount or when dependencies change
+  return () => clearInterval(interval);
+}, [polling, rideId]);
+
+
+ 
 
   const handleLocationSubmit = async (e) => {
     e.preventDefault();
@@ -443,12 +458,13 @@ function HomeLarge() {
       {/* Ride details */}
       {}
       {showRideDetails &&
-        ( polling ? (
+        (polling ? (
           <RideLoader />
         ) : (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center ">
-            <div className="flex flex-col gap-3 p-5 border m-5 rounded-xl border-gray-300 w-80 bg-white relative">
-              <div className="absolute right-5">
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="flex flex-col gap-3 p-5 border m-5 rounded-xl border-gray-300 w-full max-w-md bg-white relative">
+              {/* Close Button */}
+              <div className="absolute top-5 right-5">
                 <svg
                   onClick={() => setShowRideDetails(false)}
                   xmlns="http://www.w3.org/2000/svg"
@@ -465,26 +481,33 @@ function HomeLarge() {
                   />
                 </svg>
               </div>
-              <div className="flex justify-between items-center  border-gray-300 border-b p-2 w-full">
+
+              {/* Ride Image */}
+              <div className="flex justify-center items-center border-gray-300 border-b p-2 w-full">
                 <img
                   className="h-20 w-20 object-contain mx-auto"
                   src={img}
                   alt="rideimg"
                 />
               </div>
+
+              {/* Driver Info */}
               <div className="border-b border-gray-300 p-2 w-full">
                 <h3 className="text-xl font-semibold">
-                  Driver Name : {captain}
+                  Driver Name: {captain}
                 </h3>
                 <h3 className="text-xl font-semibold">Vehicle No: {plate}</h3>
               </div>
+
+              {/* Pickup / Dropoff */}
               <div className="border-b border-gray-300 p-2 w-full">
                 <h3 className="text-xl font-semibold">Pickup: {pickup}</h3>
                 <h3 className="text-xl font-semibold">DropOff: {dropoff}</h3>
               </div>
 
-              <div className="border-b border-gray-300 p-2 w-full">
-                <h1 className="text-2xl font-bold mx-aut0">₹{fare}</h1>
+              {/* Fare */}
+              <div className="border-b border-gray-300 p-2 w-full flex justify-center items-center">
+                <h1 className="text-2xl font-bold mx-auto">₹{fare}</h1>
               </div>
             </div>
           </div>
