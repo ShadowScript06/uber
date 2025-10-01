@@ -1,7 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Landing() {
+  const navigate=useNavigate();
   return (
     <div className="h-screen flex flex-col pt-10 lg:pt-0 lg:justify-center">
       <div className="flex justify-between items-center gap-10 mx-16">
@@ -25,6 +26,7 @@ function Landing() {
             className="bg-gray-100 w-full px-2 py-4 rounded-lg lg:w-1/2"
              type="text" placeholder="Enter Destination" />
             <button
+            onClick={()=>navigate('/user-home')}
             className="bg-black text-white w-full px-2 py-4 rounded-lg lg:w-1/4"
             >Check prices</button>
           </div>
